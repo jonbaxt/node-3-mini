@@ -4,8 +4,13 @@ let id = 0;
 module.exports = {
   create: ( req, res ) => {
     const { text, time } = req.body;
+    const { user } = req.session;
+
+    
     messages.push({ id, text, time });
+    user.messages.push({id, text, time});
     id++;
+
     res.status(200).send( messages );
   },
 
@@ -33,5 +38,10 @@ module.exports = {
     messageIndex = messages.findIndex( message => message.id == deleteID );
     messages.splice(messageIndex, 1);
     res.status(200).send( messages );
+  },
+
+  history: (req, res ) => {
+    const { user } = req.session;
+    res.status(200).send( user.messages );
   }
 };
